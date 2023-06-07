@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">iTTB</string>
+    <string name="add_workout">Add new workout</string>
+    <string name="start_time">Start time</string>
+    <string name="end_time">End time</string>
+    <string name="finish_workout">Finish the workout</string>
+    <string name="workouts">Workouts</string>
+    <string name="all_throws">Throws</string>
+    <string name="not_active">There have been no throws yet today</string>
+    <string name="put_on_the_armband">Put on an armband and start training</string>
+    <string name="made_throw">A throw has been made!</string>
+    <string name="are_you_hit">Are you hit?</string>
+    <string name="default_yes">Yes</string>
+    <string name="default_no">No</string>
+    <string name="wait">Please wait…</string>
+</resources>
