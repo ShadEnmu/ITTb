@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,21 +27,27 @@ import com.nickmax.app.workouts.presentation.components.ButtonWithIcon
 import com.nickmax.app.workouts.presentation.components.ThrowItem
 import com.nickmax.app.workouts.presentation.start_workout.components.ActiveWorkoutList
 import com.nickmax.app.workouts.presentation.start_workout.components.CustomAlertDialog
+import kotlinx.coroutines.launch
 
 @Composable
 fun StartWorkoutScreen(
     startWorkoutViewModel: StartWorkoutViewModel = hiltViewModel(),
+    mainScaffoldState: ScaffoldState
 ) {
     val imageHeight = 320.dp
     val scaffoldState = rememberScaffoldState()
     val columnState = rememberLazyListState()
     var scrolledY = 0f
     var previousOffset = 10
+    val scope = rememberCoroutineScope()
+    val message_first = stringResource(id = R.string.advice_first)
+    val message_second = stringResource(id = R.string.advice_second)
+    val accept = stringResource(id = R.string.accept_message)
 
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
-        backgroundColor = Grey100,
+        backgroundColor = Grey100
     ) { innerPadding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
@@ -116,7 +123,20 @@ fun StartWorkoutScreen(
                             )
                             .padding(top = 12.dp, start = 15.dp, end = 15.dp, bottom = 14.dp)
                             .weight(1f),
-                        onClick = { startWorkoutViewModel.onEvent(StartWorkoutEvent.EndWorkout) },
+                        onClick = {
+
+                                if(startWorkoutViewModel.state.value.bestAngle != 0 && startWorkoutViewModel.state.value.currentListOfThrows.isNotEmpty())
+                                scope.launch {
+                                    val result = mainScaffoldState.snackbarHostState.showSnackbar(
+                                        startWorkoutViewModel.state.value.bestAngle.toString(),
+                                        duration = SnackbarDuration.Indefinite
+                                    )
+
+                                }
+
+                            startWorkoutViewModel.onEvent(StartWorkoutEvent.EndWorkout)
+
+                        },
                         timeStart = startWorkoutViewModel.state.value.currentWorkoutDateStart,
                         timeEnd = startWorkoutViewModel.state.value.currentWorkoutDateEnd
                     )

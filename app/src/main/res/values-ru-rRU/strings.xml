@@ -14,4 +14,7 @@
     <string name="default_yes">Да</string>
     <string name="default_no">Нет</string>
     <string name="wait">Пожалуйста, подождите…</string>
+    <string name="advice_first">При броске с углом</string>
+    <string name="advice_second">° был наибольший шанс попадания в корзину.</string>
+    <string name="accept_message">Понятно</string>
 </resources>

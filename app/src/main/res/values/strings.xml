@@ -13,4 +13,7 @@
     <string name="default_yes">Yes</string>
     <string name="default_no">No</string>
     <string name="wait">Please wait…</string>
+    <string name="advice_first">At the angle of inclination of the arm</string>
+    <string name="advice_second">° there was absolutely the greatest number of hits!</string>
+    <string name="accept_message">Got it!</string>
 </resources>

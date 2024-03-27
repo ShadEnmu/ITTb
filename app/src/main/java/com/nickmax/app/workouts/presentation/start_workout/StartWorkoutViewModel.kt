@@ -40,7 +40,8 @@ class StartWorkoutViewModel @Inject constructor(
                     listOfThrows = state.value.listOfThrows + state.value.currentListOfThrows,
                     currentListOfThrows = emptyList(),
                     currentWorkoutDateStart = Date().time,
-                    workout = null
+                    workout = null,
+                    bestAngle = 0
                 )
                 viewModelScope.launch {
                     server.connect("00:22:06:30:75:1D", object : BluetoothServer.BluetoothCallback {
@@ -94,7 +95,8 @@ class StartWorkoutViewModel @Inject constructor(
                     maxAngle = 0
                     state.value.currentThrow?.let { workoutUseCases.saveThrowResults(it) }
                     _state.value = state.value.copy(
-                        currentListOfThrows = (state.value.currentListOfThrows + state.value.currentThrow!!)
+                        currentListOfThrows = (state.value.currentListOfThrows + state.value.currentThrow!!),
+                        bestAngle = getBestAngle(state.value.currentListOfThrows)
                     )
                 }
 
@@ -112,12 +114,14 @@ class StartWorkoutViewModel @Inject constructor(
                             getAverageAngle(state.value.currentListOfThrows),
                             getAverageSuccessRate(state.value.currentListOfThrows),
                             getHitsRate(state.value.currentListOfThrows)
-                        )
+                        ),
+                        bestAngle = getBestAngle(state.value.currentListOfThrows)
                     )
                     workoutUseCases.addWorkout(state.value.workout!!)
                     state.value.currentListOfThrows.forEach {
                         workoutUseCases.updateParentId(workoutUseCases.getWorkoutsListSize(), it.id)
                     }
+
                 }
             }
             is StartWorkoutEvent.EndSession -> {
@@ -154,5 +158,31 @@ class StartWorkoutViewModel @Inject constructor(
         val perfectAngle = 94f
         val deviation: Float = (perfectAngle / 100) * kotlin.math.abs(perfectAngle - angle)
         return (100 - deviation).toInt()
+    }
+
+    private fun getBestAngle(list: List<ThrowResult>): Int{
+        val successThrowList: MutableList<ThrowResult> = mutableListOf()
+        list.forEach {
+            if(it.isThrowSuccessful) successThrowList.add(it)
+        }
+        successThrowList.sortBy { it.throwAngle }
+        var count: Int = 1
+        var previous: Int? = null
+        var maxCount: Int = 0
+        var bestAngle: Int = 0
+
+        for (throwResult in successThrowList) {
+            if(throwResult.throwAngle == previous) count++
+            else {
+                if(count > maxCount) {
+                    maxCount = count
+                    bestAngle = throwResult.throwAngle
+                    count = 0
+                }
+            }
+            previous = throwResult.throwAngle
+        }
+
+        return bestAngle
     }
 }

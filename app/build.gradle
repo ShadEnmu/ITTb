@@ -21,9 +21,9 @@ android {
             useSupportLibrary true
         }
     }
-    hilt {
-        enableExperimentalClasspathAggregation = true
-    }
+        hilt {
+            enableExperimentalClasspathAggregation = true
+        }
     buildTypes {
         release {
             minifyEnabled false

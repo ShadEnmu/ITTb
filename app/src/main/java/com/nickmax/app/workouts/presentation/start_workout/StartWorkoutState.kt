@@ -11,5 +11,6 @@ data class StartWorkoutState(
     val workout: Workout? = null,
     var currentWorkoutDateStart: Long? = null,
     var currentWorkoutDateEnd: Long? = null,
-    var currentThrowState: Boolean? = null
+    var currentThrowState: Boolean? = null,
+    var bestAngle: Int? = null,
 )
